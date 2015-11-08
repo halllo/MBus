@@ -25,9 +25,9 @@ namespace MBus.Client
 				{
 					connection.Start().Wait();
 				}
-				catch (HttpRequestException)
+				catch (AggregateException e)
 				{
-					Log.Error("Unable to connect to server: Start server before connecting clients.");
+					Log.Error("Unable to connect to server: " + e.InnerException.Message);
 					return;
 				}
 

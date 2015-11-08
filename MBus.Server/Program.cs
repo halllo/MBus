@@ -30,6 +30,7 @@ namespace MBus.Server
 		{
 			app.UseCors(CorsOptions.AllowAll);
 			app.MapSignalR();
+			app.UseWelcomePage();
 		}
 	}
 
