@@ -5,6 +5,7 @@ using Owin;
 using System;
 using System.Configuration;
 using System.Threading.Tasks;
+using NiceConsole;
 
 namespace MBus.Server
 {

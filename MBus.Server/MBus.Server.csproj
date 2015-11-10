@@ -93,9 +93,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MBus\MBus.csproj">
+    <ProjectReference Include="..\NiceConsole\NiceConsole.csproj">
       <Project>{d030e49b-4841-4427-a775-85d89a2a1615}</Project>
-      <Name>MBus</Name>
+      <Name>NiceConsole</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

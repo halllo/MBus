@@ -7,8 +7,8 @@
     <ProjectGuid>{D030E49B-4841-4427-A775-85D89A2A1615}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MBus</RootNamespace>
-    <AssemblyName>MBus</AssemblyName>
+    <RootNamespace>NiceConsole</RootNamespace>
+    <AssemblyName>NiceConsole</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MBus
+namespace NiceConsole
 {
 	public static class Log
 	{
