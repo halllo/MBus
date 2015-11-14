@@ -6,6 +6,11 @@ using System;
 using System.Configuration;
 using System.Threading.Tasks;
 using NiceConsole;
+using System.IO;
+using System.Reflection;
+using Microsoft.Owin.StaticFiles;
+using Microsoft.Owin;
+using Microsoft.Owin.FileSystems;
 
 namespace MBus.Server
 {
@@ -31,7 +36,13 @@ namespace MBus.Server
 		{
 			app.UseCors(CorsOptions.AllowAll);
 			app.MapSignalR();
-			app.UseWelcomePage();
+
+			var staticFileOptions = new StaticFileOptions
+			{
+				RequestPath =  new PathString("/web"),
+				FileSystem = new PhysicalFileSystem(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "webdir"))
+			};
+			app.UseStaticFiles(staticFileOptions);
 		}
 	}
 
@@ -48,11 +59,17 @@ namespace MBus.Server
 
 			return base.OnConnected();
 		}
-		public override Task OnDisconnected()
+		public override Task OnDisconnected(bool stopCalled)
 		{
 			Log.Info("Client disconnected: " + Context.ConnectionId);
 
-			return base.OnDisconnected();
+			return base.OnDisconnected(stopCalled);
+		}
+		public override Task OnReconnected()
+		{
+			Log.Info("Client reconnected: " + Context.ConnectionId);
+
+			return base.OnReconnected();
 		}
 	}
 }
