@@ -4,8 +4,82 @@
 <head>
     <meta charset="utf-8" />
     <title>MBus - Home</title>
+
+	<link rel="stylesheet" href="bootstrap.min.css">
+	<link rel="stylesheet" href="bootstrap-theme.min.css">
+
 </head>
 <body>
-	MBus - welcome
+
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">MBus</a>
+			</div>
+		</div>
+	</nav>
+
+	<div class="jumbotron">
+		<div class="container">
+			<h1>connect everything</h1>
+			<p>and have all your things receive events from each other <a href="https://github.com/halllo/MBus" target="_blank">download</a></p>
+			<img src="image.png" />
+
+			<p>&copy; Manuel Naujoks 2015</p>
+
+		</div>
+	</div>
+
+	<div class="container">
+		<h2>emit events</h2>
+		<p>clientname</p>
+		<input type="text" id="clientname" />
+		<p>event</p>
+		<input type="text" id="message" />
+		<input type="button" id="sendmessage" value="emit" />
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+	</div>
+
+	<div class="jumbotron" style="background: #FFDDE9;">
+		<div class="container">
+			<h2>observe events</h2>
+			<ul id="discussion" style="max-height: 1000px; overflow-y: scroll;"></ul>
+		</div>
+	</div>
+
+	<script src="jquery-1.6.4.min.js"></script>
+	<script src="bootstrap.min.js"></script>
+	<script src="jquery.signalR-2.2.0.min.js"></script>
+	<script src="../signalr/hubs"></script>
+	<script type="text/javascript">
+		$(function () {
+			var chat = $.connection.myHub;
+			chat.client.addMessage = function (name, message) {
+				var encodedName = $('<div />').text(name).html();
+				var encodedMsg = $('<div />').text(message).html();
+				$('#discussion').append('<li><strong>' + encodedName
+					+ '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
+			};
+
+			$.connection.hub.start().done(function () {
+				$('#clientname').focus();
+				
+				$("#message").keypress(function (event) {
+					if (event.keyCode == 13) {
+						$("#sendmessage").click();
+					}
+				});
+
+				$('#sendmessage').click(function () {
+					chat.server.send($('#clientname').val(), $('#message').val());
+					$('#message').val('').focus();
+				});
+			});
+		});
+	</script>
+
 </body>
 </html>
