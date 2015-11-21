@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MBus.Client.Console", "MBus
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceConsole", "NiceConsole\NiceConsole.csproj", "{D030E49B-4841-4427-A775-85D89A2A1615}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MBus.Client", "MBus.Client\MBus.Client.csproj", "{9DB06DBB-A0E5-4554-803E-9D5069DD814D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{D030E49B-4841-4427-A775-85D89A2A1615}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D030E49B-4841-4427-A775-85D89A2A1615}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D030E49B-4841-4427-A775-85D89A2A1615}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9DB06DBB-A0E5-4554-803E-9D5069DD814D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9DB06DBB-A0E5-4554-803E-9D5069DD814D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9DB06DBB-A0E5-4554-803E-9D5069DD814D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9DB06DBB-A0E5-4554-803E-9D5069DD814D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
