@@ -20,14 +20,19 @@ namespace NiceConsole
 		{
 			It(text, ConsoleColor.Cyan);
 		}
-
-		private static void It(string text, ConsoleColor? color = null)
+		public static void Content(string prefix, string text)
 		{
-			if (color.HasValue)
-			{
-				Console.ForegroundColor = color.Value;
-			}
-			Console.WriteLine(text);
+			It(prefix, ConsoleColor.White, newLine: false);
+			It(text, ConsoleColor.Cyan);
+		}
+
+		private static void It(string text, ConsoleColor? color = null, bool newLine = true)
+		{
+			if (color.HasValue) Console.ForegroundColor = color.Value;
+
+			if (newLine) Console.WriteLine(text);
+			else Console.Write(text);
+
 			Console.ResetColor();
 		}
 	}

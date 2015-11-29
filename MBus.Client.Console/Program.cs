@@ -17,7 +17,7 @@ namespace MBus.Client.Console
 				//setup
 				{
 					mbus.OnDisconnect += () => { Log.Info("You have been disconnected."); };
-					mbus.On += (userName, message) => { Log.Content(userName + ": " + message); };
+					mbus.On += (userName, message) => { Log.Content(prefix: userName + ": ", text: message); };
 
 					try
 					{

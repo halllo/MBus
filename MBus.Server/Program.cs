@@ -50,7 +50,7 @@ namespace MBus.Server
 	{
 		public void Send(string userName, string message)
 		{
-			Log.Content("Message from " + userName + ": " + message);
+			Log.Content(prefix: "Message from " + userName + ": ", text: message);
 			Clients.All.addMessage(userName, message);
 		}
 		public override Task OnConnected()
