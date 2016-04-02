@@ -19,14 +19,15 @@
 		</div>
 	</nav>
 
-	<div class="jumbotron">
+	<div class="jumbotron" style="background-color: lightskyblue; margin-top: 50px;">
 		<div class="container">
 			<h1>MBus <small>connect everything</small></h1>
 			<p>and have all your things receive events from each other <a href="https://github.com/halllo/MBus" target="_blank">download</a></p>
-			
-			<p>&copy; Manuel Naujoks 2015</p>
-
+			<p>&copy; Manuel Naujoks 2016</p>
 		</div>
+	</div>
+	<div class="container" style="background-color: lime;">
+		<a href="https://github.com/halllo/MBus" target="_blank">relaying</a>
 	</div>
 
 	<div class="container">
@@ -65,19 +66,21 @@
 	<script src="jquery-2.1.4.min.js"></script>
 	<script src="bootstrap.min.js"></script>
 	<script src="jquery.signalR-2.2.0.min.js"></script>
-	<script src="../signalr/hubs"></script>
 	<script type="text/javascript">
 		$(function () {
-			var chat = $.connection.myHub;
-			chat.client.addMessage = function (name, message) {
+
+			var connection1 = $.hubConnection();
+			var myHub1 = connection1.createHubProxy('myHub');
+
+			myHub1.on('addMessage', function (name, message) {
 				var encodedName = $('<div />').text(name).html();
 				var encodedMsg = $('<div />').text(message).html();
 				var list = $('#discussion');
 				list.append('<li><strong>' + encodedName + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
 				list.scrollTop(list[0].scrollHeight);
-			};
+			});
 
-			$.connection.hub.start().done(function () {
+			connection1.start().done(function () {
 				$('#clientname').focus();
 
 				$("#message").keypress(function (event) {
@@ -87,10 +90,11 @@
 				});
 
 				$('#sendmessage').click(function () {
-					chat.server.send($('#clientname').val(), $('#message').val());
+					myHub1.invoke('send', $('#clientname').val(), $('#message').val());
 					$('#message').val('').focus();
 				});
 			});
+
 		});
 	</script>
 
