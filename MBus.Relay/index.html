@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<title>MBus.Relay - Home</title>
+
+	<link rel="stylesheet" href="scripts/bootstrap.min.css">
+	<link rel="stylesheet" href="scripts/bootstrap-theme.min.css">
+
+</head>
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">MBus.Relay</a>
+			</div>
+		</div>
+	</nav>
+
+	<div class="jumbotron" style="background-color: lime; margin-top: 50px;">
+		<div class="container">
+			<h1>MBus.Relay <small>connect everything more</small></h1>
+			<p>and have all your things receive events from each other <a href="https://github.com/halllo/MBus" target="_blank">download</a></p>
+			<p>&copy; Manuel Naujoks 2016</p>
+		</div>
+	</div>
+
+	<div class="container">
+		<h2>emit events</h2>
+		<form class="form-horizontal">
+			<div class="form-group">
+				<label for="clientname" class="col-sm-2 control-label">clientname</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="clientname" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="message" class="col-sm-2 control-label">event</label>
+				<div class="col-sm-10">
+					<input type="text" class="col-sm-10 form-control" id="message" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<input type="button" class="btn btn-default" id="sendmessage" value="emit" />
+				</div>
+			</div>
+
+			<br />
+			<br />
+		</form>
+	</div>
+
+	<div class="jumbotron">
+		<div class="container">
+			<h2>observe events</h2>
+			<ul id="discussion" style="height:500px; max-height:500px; overflow-y:scroll"></ul>
+		</div>
+	</div>
+
+	<script src="scripts/jquery-2.1.4.min.js"></script>
+	<script src="scripts/bootstrap.min.js"></script>
+	<script src="scripts/jquery.signalR-2.2.0.min.js"></script>
+	<script type="text/javascript">
+		$(function () {
+
+			var connection1 = $.hubConnection();
+			var myHub1 = connection1.createHubProxy('myHub');
+
+			myHub1.on('addMessage', function (name, message) {
+				var encodedName = $('<div />').text(name).html();
+				var encodedMsg = $('<div />').text(message).html();
+				var list = $('#discussion');
+				list.append('<li><strong>' + encodedName + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
+				list.scrollTop(list[0].scrollHeight);
+			});
+
+			connection1.start().done(function () {
+				$('#clientname').focus();
+
+				$("#message").keypress(function (event) {
+					if (event.keyCode == 13) {
+						$("#sendmessage").click();
+					}
+				});
+
+				$('#sendmessage').click(function () {
+					myHub1.invoke('send', $('#clientname').val(), $('#message').val());
+					$('#message').val('').focus();
+				});
+			});
+
+		});
+	</script>
+
+</body>
+</html>
