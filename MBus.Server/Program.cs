@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNet.SignalR;
+using Microsoft.Owin;
 using Microsoft.Owin.Cors;
+using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.Hosting;
+using Microsoft.Owin.StaticFiles;
+using NiceConsole;
 using Owin;
 using System;
 using System.Configuration;
-using System.Threading.Tasks;
-using NiceConsole;
 using System.IO;
 using System.Reflection;
-using Microsoft.Owin.StaticFiles;
-using Microsoft.Owin;
-using Microsoft.Owin.FileSystems;
+using System.Threading.Tasks;
 
 namespace MBus.Server
 {
@@ -39,9 +39,14 @@ namespace MBus.Server
 
 			var staticFileOptions = new StaticFileOptions
 			{
-				RequestPath =  new PathString("/web"),
+				RequestPath = new PathString("/web"),
 				FileSystem = new PhysicalFileSystem(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "webdir"))
 			};
+			app.UseDefaultFiles(new DefaultFilesOptions
+			{
+				RequestPath = staticFileOptions.RequestPath,
+				FileSystem = staticFileOptions.FileSystem,
+			});
 			app.UseStaticFiles(staticFileOptions);
 		}
 	}
