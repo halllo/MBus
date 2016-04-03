@@ -28,7 +28,7 @@
 	</div>
 	<div class="container" style="background-color: lime;">
 		<input type="button" class="btn btn-default" id="startrelaying" value=""/>
-		<a href="http:///" target="_blank" id="nowrelaying">relaying</a>
+		<a href="http:///" target="_blank" id="nowrelaying"></a>
 	</div>
 
 	<div class="container">
@@ -92,11 +92,14 @@
 			var connection1 = $.hubConnection();
 			var myHub1 = connection1.createHubProxy('myHub');
 			var myHub2 = undefined;
+			var relayedPostfix = function () {
+				return " (relayed by " + myHub2.connection.id + ")";
+			};
 
 			myHub1.on('addMessage', function (name, message) {
 				appendMessage(name, message);
-				if (myHub2 && !name.endsWith(" (relayed)")) {
-					myHub2.invoke('send', name + " (relayed)", message);
+				if (myHub2 && !name.endsWith(relayedPostfix())) {
+					myHub2.invoke('send', name + relayedPostfix(), message);
 				}
 			});
 
@@ -123,12 +126,13 @@
 				myHub2 = connection2.createHubProxy('myHub');
 
 				myHub2.on('addMessage', function (name, message) {
-					if (myHub1 && !name.endsWith(" (relayed)")) {
-						myHub1.invoke('send', name + " (relayed)", message);
+					if (myHub1 && !name.endsWith(relayedPostfix())) {
+						myHub1.invoke('send', name + relayedPostfix(), message);
 					}
 				});
 
 				connection2.start().done(function () {
+					$('#nowrelaying').text("relaying as " + connection2.id);
 					$('#nowrelaying').show();
 				});
 			});
