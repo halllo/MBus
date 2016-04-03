@@ -27,7 +27,8 @@
 		</div>
 	</div>
 	<div class="container" style="background-color: lime;">
-		<a href="https://github.com/halllo/MBus" target="_blank">relaying</a>
+		<input type="button" class="btn btn-default" id="startrelaying" value="relay over http://localhost:20030/"/>
+		<a href="http://localhost:20030/" target="_blank" id="nowrelaying">relaying</a>
 	</div>
 
 	<div class="container">
@@ -69,15 +70,23 @@
 	<script type="text/javascript">
 		$(function () {
 
-			var connection1 = $.hubConnection();
-			var myHub1 = connection1.createHubProxy('myHub');
-
-			myHub1.on('addMessage', function (name, message) {
+			var appendMessage = function (name, message) {
 				var encodedName = $('<div />').text(name).html();
 				var encodedMsg = $('<div />').text(message).html();
 				var list = $('#discussion');
 				list.append('<li><strong>' + encodedName + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
 				list.scrollTop(list[0].scrollHeight);
+			};
+
+			var connection1 = $.hubConnection();
+			var myHub1 = connection1.createHubProxy('myHub');
+			var myHub2 = undefined;
+
+			myHub1.on('addMessage', function (name, message) {
+				appendMessage(name, message);
+				if (myHub2 && !name.endsWith(" (relayed)")) {
+					myHub2.invoke('send', name + " (relayed)", message);
+				}
 			});
 
 			connection1.start().done(function () {
@@ -92,6 +101,24 @@
 				$('#sendmessage').click(function () {
 					myHub1.invoke('send', $('#clientname').val(), $('#message').val());
 					$('#message').val('').focus();
+				});
+			});
+
+			$('#nowrelaying').hide();
+			$('#startrelaying').click(function () {
+				$('#startrelaying').hide();
+
+				var connection2 = $.hubConnection("http://localhost:20030/signalr");
+				myHub2 = connection2.createHubProxy('myHub');
+
+				myHub2.on('addMessage', function (name, message) {
+					if (myHub1 && !name.endsWith(" (relayed)")) {
+						myHub1.invoke('send', name + " (relayed)", message);
+					}
+				});
+
+				connection2.start().done(function () {
+					$('#nowrelaying').show();
 				});
 			});
 
