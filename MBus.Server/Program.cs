@@ -7,10 +7,12 @@ using Microsoft.Owin.StaticFiles;
 using NiceConsole;
 using Owin;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace MBus.Server
 {
@@ -30,12 +32,14 @@ namespace MBus.Server
 		}
 	}
 
+
 	public class Startup
 	{
 		public void Configuration(IAppBuilder app)
 		{
 			app.UseCors(CorsOptions.AllowAll);
 			app.MapSignalR();
+			app.UseWebApi(ConfigureWebApi());
 
 			var staticFileOptions = new StaticFileOptions
 			{
@@ -49,7 +53,30 @@ namespace MBus.Server
 			});
 			app.UseStaticFiles(staticFileOptions);
 		}
+
+		private HttpConfiguration ConfigureWebApi()
+		{
+			var config = new HttpConfiguration();
+
+			config.Routes.MapHttpRoute("DefaultApi",
+				"api/{controller}/{id}",
+				new { id = RouteParameter.Optional });
+
+			return config;
+		}
 	}
+
+
+	public class RelayController : ApiController
+	{
+		// GET /api/relay
+		public IEnumerable<string> Get()
+		{
+			var relayServerUri = ConfigurationManager.AppSettings["relayserver"];
+			return new[] { relayServerUri };
+		}
+	}
+
 
 	public class MyHub : Hub
 	{

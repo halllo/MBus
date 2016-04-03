@@ -27,8 +27,8 @@
 		</div>
 	</div>
 	<div class="container" style="background-color: lime;">
-		<input type="button" class="btn btn-default" id="startrelaying" value="relay over http://localhost:20030/"/>
-		<a href="http://localhost:20030/" target="_blank" id="nowrelaying">relaying</a>
+		<input type="button" class="btn btn-default" id="startrelaying" value=""/>
+		<a href="http:///" target="_blank" id="nowrelaying">relaying</a>
 	</div>
 
 	<div class="container">
@@ -70,6 +70,17 @@
 	<script type="text/javascript">
 		$(function () {
 
+			$('#startrelaying').hide();
+			$('#nowrelaying').hide();
+			$.getJSON("/api/relay", function (data) {
+				if (data[0]) {
+					var relayserver = data[0];
+					$('#startrelaying').val("start relaying over " + relayserver);
+					$('#startrelaying').show();
+					$('#nowrelaying').attr("href", relayserver)
+				}
+			});
+
 			var appendMessage = function (name, message) {
 				var encodedName = $('<div />').text(name).html();
 				var encodedMsg = $('<div />').text(message).html();
@@ -104,11 +115,11 @@
 				});
 			});
 
-			$('#nowrelaying').hide();
 			$('#startrelaying').click(function () {
 				$('#startrelaying').hide();
 
-				var connection2 = $.hubConnection("http://localhost:20030/signalr");
+				var relayserver = $('#nowrelaying').attr("href");
+				var connection2 = $.hubConnection(relayserver + "/signalr");
 				myHub2 = connection2.createHubProxy('myHub');
 
 				myHub2.on('addMessage', function (name, message) {
