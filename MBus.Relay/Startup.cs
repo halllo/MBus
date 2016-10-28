@@ -52,6 +52,7 @@ namespace MBus.Relay
 		{
 			if (message != null && !string.IsNullOrWhiteSpace(message.Sender) && !string.IsNullOrWhiteSpace(message.Content))
 			{
+				RecentMessages.Record(message.Sender, message.Content);
 				var myHub = GlobalHost.ConnectionManager.GetHubContext<MyHub>();
 				myHub.Clients.All.addMessage(message.Sender, message.Content);
 			}
